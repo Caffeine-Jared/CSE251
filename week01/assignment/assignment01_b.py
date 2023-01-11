@@ -35,24 +35,37 @@ d. How do you get the value an object's attribute (see https://datagy.io/python-
 # TODO - Create a thread class
 class yourThread(threading.Thread):
       def __init__(self, num):
-         threading.Thread.__init__(self)
+         super().__init__()
          self.num = num
          self.sum = 0
+
       def run(self):
-         for i in range(1, self.num + 1):
+         for i in range(1, self.num):
                self.sum += i
 
 def main():
     # Instantiate your thread class and pass in 10.
     # Test (assert) if its sum attribute is equal to 45.
     # Note: do no use 'yourThread' for the name of your thread object
-    assert yourThread.sum == 45, f'The sum should equal 45 but instead was {yourThread.sum}'
+   yourThread1 = yourThread(10)
+   yourThread1.start()
+   yourThread1.join()
+   print(yourThread1.sum)
+   assert yourThread1.sum == 45, f'The sum should equal 45 but instead was {yourThread.sum}'
     
     # Repeat, passing in 13
-    assert yourThread.sum == 78, f'The sum should equal 78 but instead was {yourThread.sum}'
+   yourThread2 = yourThread(13)
+   yourThread2.start()
+   yourThread2.join()
+   print(yourThread2.sum)
+   assert yourThread2.sum == 78, f'The sum should equal 78 but instead was {yourThread.sum}'
     
     # Repeat, passing in 17
-    assert yourThread.sum == 136, f'The sum should equal 136 but instead was {yourThread.sum}'
+   yourThread3 = yourThread(17)
+   yourThread3.start()
+   yourThread3.join()
+   print(yourThread3.sum)
+   assert yourThread3.sum == 136, f'The sum should equal 136 but instead was {yourThread.sum}'
 
 if __name__ == '__main__':
     main()
