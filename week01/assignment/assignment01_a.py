@@ -31,16 +31,44 @@ import threading
 # global sum
 SUM = 0
 
+def calculate_sum(x):
+   global SUM
+   SUM = 0
+   for i in range(1, x):
+      SUM += i
+   print("calculate_sum")
+   print(SUM)
+
 def main():
-    
-    # If not using a global, use this list to store your results
-    results = [0] * 3
+   thread1 = threading.Thread(target=calculate_sum, args=(10,))
+   thread1.start()
+   thread1.join()
+   print("thread1")
+   print(SUM)
+  
+   assert SUM == 45, f'The sum should equal 45 but instead was {SUM}'  
+
+   thread2 = threading.Thread(target=calculate_sum, args=(13,))
+   thread2.start()
+   thread2.join()
+   print("thread2")
+   print(SUM)
+   assert SUM == 78, f'The sum should equal 78 but instead was {SUM}'
+
+   thread3 = threading.Thread(target=calculate_sum, args=(17,))
+   thread3.start()
+   thread3.join()
+   print("thread3")
+   print(SUM)
+   assert SUM == 136, f'The sum should equal 136 but instead was {SUM}'
+   # results = [0] * 3 
+
+
+
+
     
     # If using a global, place these asserts after the call to your summing function 
-    # to check that your code is working correctly
-    #assert SUM == 45, f'The sum should equal 45 but instead was {SUM}'  
-    #assert SUM == 78, f'The sum should equal 78 but instead was {SUM}'    
-    #assert SUM == 136, f'The sum should equal 136 but instead was {SUM}'
+    # to check that your code is working correctly   
     
     # If using a list object, place these asserts after the call to your summing function
     # to check that your code is working correctly

@@ -33,6 +33,14 @@ d. How do you get the value an object's attribute (see https://datagy.io/python-
 ######################
 
 # TODO - Create a thread class
+class yourThread(threading.Thread):
+      def __init__(self, num):
+         threading.Thread.__init__(self)
+         self.num = num
+         self.sum = 0
+      def run(self):
+         for i in range(1, self.num + 1):
+               self.sum += i
 
 def main():
     # Instantiate your thread class and pass in 10.
