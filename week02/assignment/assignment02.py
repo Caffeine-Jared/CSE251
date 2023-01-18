@@ -24,11 +24,10 @@ Psuedocode:
    if the value is prime using the isPrime function. Use the globals
    to keep track of the total numbers examined and the number of primes
    found. 
-
 Questions:
-1. Time to run using 1 thread =
-2. Time to run using 5 threads =
-3. Time to run using 10 threads =
+1. Time to run using 1 thread = 
+2. Time to run using 5 threads = 
+3. Time to run using 10 threads = 
 4. Based on your study of the GIL (see https://realpython.com/python-gil), 
    what conclusions can you draw about the similarity of the times (short answer)?
    >
@@ -49,18 +48,23 @@ prime_count = 0
 numbers_processed = 0
 
 NUMBER_THREADS = 10
+#1. Create variable for the start number (10_000_000_000)
+start_number = 10000000000
+#2. Create variable for range of numbers to examine (110_003)
+range_of_numbers = 110003
+#3. Create variable for number of threads (start with 1 to get your program running,
+#   then increase to 5, then 10).
 
+number_of_threads = 11
 
 def is_prime(n: int):
     """
     Primality test using 6k+-1 optimization.
     From: https://en.wikipedia.org/wiki/Primality_test
-
     Parameters
     ----------
     ``n`` : int
         Number to determine if prime
-
     Returns
     -------
     bool
@@ -83,7 +87,52 @@ if __name__ == '__main__':
     begin_time = time.perf_counter()
 
     # TODO write code here
-   
+
+    def partition_numbers(start_number, range_of_numbers, number_of_threads):
+        partition_size = range_of_numbers // number_of_threads
+        partitions = []
+        for i in range(number_of_threads):
+            if i == number_of_threads - 1:
+                partitions.append((start_number + i * partition_size, start_number + range_of_numbers))
+                #primey_wimey1(start_number + i * partition_size, start_number + range_of_numbers)
+            else:
+                partitions.append((start_number + i * partition_size, start_number + (i + 1) * partition_size))
+                #primey_wimey1(start_number + i * partition_size, start_number + (i + 1) * partition_size)
+        return partitions
+    
+    def primey_wimey1(start : int , end : int):
+        global prime_count
+        global numbers_processed
+
+        for i in range(start,end):
+            val = is_prime(i)
+            if val == True:
+                prime_count += 1
+                numbers_processed += 1
+            elif val == False:
+                numbers_processed += 1
+            # elif is_prime(i) == False:
+        print(f"numbers processsed = {numbers_processed}")
+        print(f"prime count = {prime_count}")
+        return prime_count, numbers_processed
+    
+    def is_prime_multi(start_number, range_of_numbers, number_of_threads):
+
+        partitions = partition_numbers(start_number, range_of_numbers, number_of_threads)
+    
+        threads = []
+        for i in range(number_of_threads): 
+            
+            threads.append( 
+                threading.Thread(target=primey_wimey1, args=(partitions[i]))
+            ) 
+
+            threads[i].start()
+        
+        for i in range(number_of_threads):
+            threads[i].join()
+
+    is_prime_multi(start_number, range_of_numbers, number_of_threads)
     # Use the below code to check and print your results
     assert numbers_processed == 110_003, f"Should check exactly 110,003 numbers but checked {numbers_processed}"
     assert prime_count == 4764, f"Should find exactly 4764 primes but found {prime_count}"
