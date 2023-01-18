@@ -16,6 +16,9 @@ from datetime import datetime, timedelta
 import threading
 import requests
 import json
+deck_id = '5lc1xs96ns03'
+url = f'https://deckofcardsapi.com/api/deck/{deck_id}/draw/?count=1'
+# https://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1
 
 class Request_thread(threading.Thread):
 
@@ -43,11 +46,22 @@ class Deck:
 
     def reshuffle(self):
         # TODO - add call to reshuffle
+        t1 = Request_thread(f'https://deckofcardsapi.com/api/deck/{self.id}/shuffle/')
+        t1.start()
+        t1.join()
         pass
 
     def draw_card(self):
         # TODO add call to get a card
-        pass
+        t2 = Request_thread(f'https://deckofcardsapi.com/api/deck/{self.id}/draw/?count=2')
+        t2.start()
+        t2.join()
+        if t2.response != {}:
+            self.remaining = t2.response['remaining']
+            return t2.response['cards'][0]['code']
+        else:
+            return 'something went wrong'
+            
 
     def cards_remaining(self):
         return self.remaining
@@ -66,7 +80,7 @@ if __name__ == '__main__':
     #        team_get_deck_id.py program once. You can have
     #        multiple decks if you need them
 
-    deck_id = 'ENTER ID HERE'
+    deck_id = '5lc1xs96ns03'
 
     # Test Code >>>>>
     deck = Deck(deck_id)
