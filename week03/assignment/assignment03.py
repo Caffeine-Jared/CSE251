@@ -32,6 +32,20 @@ call_count = 0
 #TODO create a thread class that uses the 'requests' module
 #     to call the server using an URL.
 
+class MyThread(threading.Thread):
+        def __init__(self, url):
+            threading.Thread.__init__(self)
+            self.url = TOP_API_URL + url
+
+        def run(self):
+            global call_count
+            call_count += 1
+            print(f'Getting data from {self.url}')
+            response = requests.get(self.url)
+            data = json.loads(response.text)
+            print(f'Got data from {self.url}')
+            return data
+
 
 def print_film_details(film, chars, planets, starships, vehicles, species):
     '''
@@ -70,15 +84,19 @@ def main():
     # to see the json/dictionary). Note that these categories are for
     # all the Star Wars movies.
 
+    MyThread('/').start()
+
     # TODO Retrieve details on film 6 by putting a '6' at the end of the film URL.
     # For example, http://127.0.0.1:8790/film/6 gives you all the details of 
     # the sixth movie.
     
+    MyThread('/film/6').start()
+
     # Iterate over each of the keys in the sixth film details and get the data
     # for each of the categories (might want to create function to do this)
 
     # TODO Call the display function
-
+    # print_film_details(film, chars, planets, st
     print(f'There were {call_count} calls to the server')
     total_time = time.perf_counter() - begin_time
     total_time_str = "{:.2f}".format(total_time)
